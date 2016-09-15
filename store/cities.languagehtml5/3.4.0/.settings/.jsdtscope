@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry excluding="ui/|ui/transitions/|examples/starter/|ui/src/|examples/todos/|examples/knockout/|examples/starter/js/|plugins/" kind="src" path=""/>
+	<classpathentry kind="src" path="examples/knockout"/>
+	<classpathentry excluding="js/" kind="src" path="examples/starter"/>
+	<classpathentry kind="src" path="examples/starter/js"/>
+	<classpathentry kind="src" path="examples/todos"/>
+	<classpathentry kind="src" path="plugins"/>
+	<classpathentry excluding="transitions/|src/" kind="src" path="ui"/>
+	<classpathentry kind="src" path="ui/src"/>
+	<classpathentry kind="src" path="ui/transitions"/>
+	<classpathentry kind="con" path="org.eclipse.wst.jsdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="output" path=""/>
+</classpath>

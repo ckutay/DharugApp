@@ -1,0 +1,30 @@
+#game_table {
+    background-color:yellow;
+	margin: 10px auto;
+}
+
+#game_table div {
+	border: 1px solid #07c;
+	width: 75px;
+	height: 75px;
+	cursor: pointer;
+
+}
+
+#settings{
+	text-align: center;
+}
+
+.showingCard{
+	background-color: yellow;
+    background-size: contain;
+    background-repeat:no-repeat;
+    background-position:center;
+    color:black;
+    font-size: 100%;
+    text-align:center;
+}
+
+.pairFound{
+	background-color: red;
+}

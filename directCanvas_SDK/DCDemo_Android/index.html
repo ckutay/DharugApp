@@ -1,0 +1,174 @@
+<!DOCTYPE html><!--HTML5 doctype-->
+<html>
+<head>
+<title>directCanvas Android Sample</title>
+<meta http-equiv="Content-type" content="text/html; charset=utf-8"> 
+<style type="text/css">
+    /* Prevent copy paste for all elements except text fields */
+    *  { -webkit-user-select:none; -webkit-tap-highlight-color:rgba(255, 255, 255, 0); }
+    input, textarea  { -webkit-user-select:text; }
+    
+    /* Set up the page with a default background image */
+    body {
+        background-color:transparent;
+        color:#000;
+        font-family:Arial;
+        font-size:18pt;
+        margin:0px;padding:0px;
+    }
+	
+	button { 
+		font-size:24pt;
+		opacity:.5;
+	}
+</style>
+
+
+<script type="text/javascript" charset="utf-8" src="http://localhost:58888/_appMobi/appmobi.js"></script> 
+<script type="text/javascript" charset="utf-8" src="http://localhost:58888/_appMobi/xhr.js"></script> 
+
+<script type="text/javascript">
+var boolDirectCanvasEngaged = true;
+
+
+/* This function runs once the page is loaded, but appMobi is not yet active */
+var init = function(){
+
+};
+window.addEventListener("load",init,false);  
+
+/* This code prevents users from dragging the page */
+var preventDefaultScroll = function(event) {
+    event.preventDefault();
+    window.scroll(0,0);
+    return false;
+};
+document.addEventListener('touchmove', preventDefaultScroll, false);
+
+/* This code is used to run as soon as appMobi activates */
+var onDeviceReady=function(){
+    //Size the display to 768px by 1024px in the XDK
+	
+	 //lock orientation - necessary for directCanvas
+	AppMobi.device.setRotateOrientation("landscape");
+	AppMobi.device.setAutoRotate(false);
+	
+	//Load files for directCanvas -- this instantiates the directCanvas
+	if (boolDirectCanvasEngaged == true) {
+		document.getElementById("spnInfo").innerHTML = "ACCELERATED directCanvas";
+		AppMobi.canvas.load("index.js");
+	} else {
+		document.getElementsByTagName("body")[0].style.backgroundColor = "#000";
+		document.getElementById("spnInfo").innerHTML = "UNACCELERATED HTML5 CANVAS";
+		//document.getElementsByTagName("body")[0].innerHTML += '<canvas id="testCanvas" style="position:absolute;top:0px;left:0px;width:1024px;height:768px;background-color:transparent;"></canvas>';
+		ctx=document.getElementById("testCanvas").getContext('2d');
+		loadScript("init.js",function(){ console.log('init.js loaded'); });
+		loadScript("dcAndroid.js",function(){ console.log('dcAndroid.js loaded'); AppMobi.device.hideSplashScreen(); });
+	}
+	
+	//enable multi-touch for dcAndroid
+	try {
+		AppMobi.multitouch.enable();
+	} catch(e) {}
+
+	
+};
+document.addEventListener("appMobi.device.ready",onDeviceReady,false);    
+
+//Accelerometer
+var options = { frequency: 60, adjustForRotation: true  };  // Update every 60 ms
+var watchID;
+var objAcceleration = new Object();
+function startAccelerometer() 
+{
+	watchID = AppMobi.accelerometer.watchAcceleration(onAccelerometerSuccess, options);
+	
+}
+function onAccelerometerSuccess(objReturn) 
+{
+	if (boolDirectCanvasEngaged == true)
+	{
+		if (objReturn.x < -0.2 || objReturn.x > 0.2 )
+		{
+			if (objReturn.x >= 0) {
+				AppMobi.canvas.execute("iDirection = 1;");
+			}
+				
+			if (objReturn.x < 0) {
+				AppMobi.canvas.execute("iDirection = -1;");
+			}
+		}
+		else
+		{
+			AppMobi.canvas.execute("iDirection = 0;");
+		}
+	}
+	else
+	{
+		if (objReturn.x < -0.2 || objReturn.x > 0.2 )
+		{
+			if (objReturn.x >= 0) {
+				iDirection = 1;
+			}
+				
+			if (objReturn.x < 0) {
+				iDirection = -1;
+			}
+		}
+		else
+		{
+			iDirection = 0;
+		}
+	}
+	
+	
+}
+
+//Create a new sprite
+function newSprite(evt) {
+	if (boolDirectCanvasEngaged) {
+		AppMobi.canvas.execute("startAnimation(" + evt.touches[0].pageX + "," + evt.touches[0].pageY + ");");
+	}
+	else
+	{
+		startAnimation(evt.touches[0].pageX,evt.touches[0].pageY);
+	}
+}
+
+
+</script>
+
+</head>
+<body ontouchstart='newSprite(event); return false;'>
+<canvas id="testCanvas" width="1024" height="768" style="position:absolute;top:0px;left:0px;width:1024px;height:768px;background-color:transparent;"></canvas>
+<div id="divSplash" style="margin:15px; position:absolute;top:0px;left:0px;width:100%;height:100%;color:#fff;font-family:arial;text-align:center;" >
+directCanvas for Android demonstration
+<li/>Touch the screen to create a new sprite
+<li/>Tip the device to animate the sprites 
+<li/><span id="spnInfo"></span>
+</div>
+
+<div id="divInfo" style="position:absolute;bottom:0px;right:0px;color:#fff;"></div>
+
+
+</body>
+<script>
+//if directCanvas is not available, load the directCanvas libraries this way
+function loadScript(url, callback)
+{
+    // adding the script tag to the head as suggested before
+   var head = document.getElementsByTagName('head')[0];
+   var script = document.createElement('script');
+   script.type = 'text/javascript';
+   script.src = url;
+
+   // then bind the event to the callback function 
+   // there are several events for cross browser compatibility
+   script.onreadystatechange = callback;
+   script.onload = callback;
+
+   // fire the loading
+   head.appendChild(script);
+}
+</script>
+</html>

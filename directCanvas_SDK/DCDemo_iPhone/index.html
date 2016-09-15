@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<style type="text/css">
+	    *  { -webkit-user-select:none; -webkit-tap-highlight-color:rgba(255, 255, 255, 0); }
+        input, textarea  { -webkit-user-select:text; } 
+	</style>
+	<meta charset="utf-8" />
+	<title>AppMobi DirectCanvas Test</title>
+	<link rel="stylesheet" type="text/css" href="style.css" />
+	<script type="text/javascript" charset="utf-8" src="http://localhost:58888/_appMobi/appmobi.js"></script>
+	<script>
+		  
+		 //*** Prevent Default Scrolling ******
+		preventDefaultScroll = function(event) {
+			// Prevent scrolling on this element
+			event.preventDefault();
+			window.scroll(0,0);
+			return false;
+		};
+    
+		window.document.addEventListener('touchmove', preventDefaultScroll, false);
+		
+		//Global Variables
+		
+		//variable to let $('id') equal document.getElementById('id')
+		var $ = function(q) { return document.getElementById(q);};
+		
+		var touchNum=0;
+		var prevColor=1;
+		//Array of all the colors being used in order as displayed on color pallet
+		var colorPallet= new Array("#c01631","#07a0e4","#f9ba13");
+		
+			var onDeviceReady = function() {
+			
+			AppMobi.canvas.load("index.js");
+			
+			// hides status bar
+			AppMobi.device.hideStatusBar();
+
+			 //lock orientation
+			AppMobi.device.setRotateOrientation("landscape");
+			AppMobi.device.setAutoRotate(false);
+			
+			document.removeEventListener("appMobi.device.ready",onDeviceReady, false);
+		
+			AppMobi.display.useViewport(320,480);
+		
+			AppMobi.device.hideSplashScreen();	
+			
+			
+			// Touch forwarding is now in the Main.js 
+		};
+		
+
+		document.addEventListener("appMobi.device.ready", onDeviceReady, false);
+		
+		function toolChange(tool){
+			//This changes which tool is selected on the canvas layer 
+			AppMobi.canvas.execute("_.drawTool="+"'"+tool+"'");
+			
+			//Here we reset all images of tools back to original state
+			 $('pencil').style.background="url('images/Brush_pencil_Up.jpg') no-repeat";
+			// $('array').style.background="url('images/Brush_array_Up.jpg') no-repeat";
+			 $('rectangle').style.background="url('images/Brush_rectangle_Up.jpg') no-repeat";
+			 $('clear').style.background="url('images/Brush_clear_Up.jpg') no-repeat";
+			 
+			 //We then set tool selected to have over state
+			 $(tool).style.background="url('images/Brush_"+tool+"_Over.jpg') no-repeat";
+		}
+		function colorChange(color){
+			//This changes which color is selected on the canvas layer. 
+			AppMobi.canvas.execute("_.selColor="+"'"+color+"'");
+			for (i=0;i<=colorPallet.length-1;i++)
+					{
+						if(colorPallet[i]==color){changeState(i);}
+					}
+		}
+		function changeState(num){
+			//basic function to change the background image of the newly selected color
+		
+			switch(prevColor){
+				case 0: $('red').style.background="url('images/Color_1-Red_Up.jpg') no-repeat";
+						break;
+				case 1: $('blue').style.background="url('images/Color_8-Blue_Up.jpg') no-repeat";
+						break;	
+				case 2: $('yellow').style.background="url('images/Color_3-Yellow_Up.jpg') no-repeat";
+						break;
+			}
+			
+			prevColor=num;
+			
+			switch(num){
+			
+				case 0: $('red').style.background="url('images/Color_1-Red_Over.jpg') no-repeat";
+						break;
+				case 1: $('blue').style.background="url('images/Color_8-Blue_Over.jpg') no-repeat";
+						break;
+				case 2: $('yellow').style.background="url('images/Color_3-Yellow_Over.jpg') no-repeat";
+						break;
+			}
+		}
+	</script>
+	
+</head>
+<body> 
+<!-- --------------------------- -->
+<!-- This div is a stub to handle going full screen in Safari on iOS devices. -->
+<div id="iPhoneSafari" style="display:none; background-color:#FFFFFF; height:255px; width:430px; z-index:2000; position:absolute; top:10px; left:10px; padding:10px;-webkit-border-radius:10px; -moz-border-radius:10px; border-radius:10px; font-family:Arial; opacity:.80;">
+	<strong>Run This Application Full Screen</strong><br />
+	<div>This device supports running in a full screen mode. Please follow these simple steps:</div>
+	<ul>
+		<li>Touch on the icon that looks like this <img src="addtohs.png">.</li>
+		<li>Choose "Add to Home Screen".</li>
+		<li>Name your shortcut and touch "Add".</li>
+		<li>Touch your new shortcut to launch full screen.</li>
+	</ul>
+	<div style="cursor:pointer; position:relative; top:50px; text-align:center; font-weight:bold;" onclick='document.getElementById("iPhoneSafari").style.display = "none";'>Close</div>
+</div>
+<!-- --------------------------- -->
+<div id="drawTools" >
+	<div id="brushes" style="left:13px;top:28px;position:relative;">
+		<div id="pencil" onclick="toolChange('pencil')"></div>
+		<div style='padding-right:10px' id="rectangle" onclick="toolChange('rectangle')"></div>
+	</div>
+	
+	<div id="colors" style="left:20px;top:28px;position:relative;">
+		<div id="red"  onclick="colorChange('#c01631')"></div>
+		<div id="blue" onclick="colorChange('#07a0e4')"></div>
+		<div id="yellow"  onclick="colorChange('#f9ba13')"></div>
+	</div>
+	
+		<div id="clear" onclick="toolChange('clear');"></div>
+</div>
+
+</body>
+</html>

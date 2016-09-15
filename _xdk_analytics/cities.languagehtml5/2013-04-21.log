@@ -1,0 +1,2 @@
+#Fields: date time c-ip cs-username cs-method cs-uri-stem cs-uri-query sc-status sc-bytes cs(User-Agent) cs(Referer)
+2013-04-21 22:10:06 58.173.104.0 EMULATED_GALAXY_TAB_626B239E-F264-3005-91D4-8F4664853434 GET /device/start.event - 200 0 Mozilla/5.0+(Linux;+U;+Android+2.2;+en-us;+Galaxy+Tab+Build/FRF91)+AppleWebKit/533.1+(KHTML,+like+Gecko)+Version/4.0+Mobile+Safari/533.1 http://cities.languagehtml5-3.4.0-index.html

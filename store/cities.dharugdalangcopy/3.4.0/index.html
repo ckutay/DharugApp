@@ -1,0 +1,425 @@
+<!DOCTYPE html><!--HTML5 doctype-->
+<html>
+<head>
+<title>Dharug Dalang</title>
+<meta http-equiv="Content-type" content="text/html; charset=utf-8"> 
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<META HTTP-EQUIV="Pragma" CONTENT="no-cache">
+
+
+<link rel="stylesheet" type="text/css" href="template/icons.css" /> 
+<link rel="stylesheet"  type="text/css" href="template/jq.ui.eco.css" title="eco"  title='default' />
+<link rel="stylesheet" type="text/css" href="template/jq.ui.css"  disabled = "true" />
+
+<style>
+	.scrollBar{background:white;}
+    h3 {text-align:center; font-size:35px;}
+    ul.iconLinks li {font-size:12px; font-weight:normal;}
+    .listbutton {
+        display:block;
+        border:1px solid black;
+        color:black;
+        background:orange;
+        border-radius:5px;
+        width:80%;
+        text-decoration:none;
+        text-align:center;
+        margin:auto;
+        margin-bottom:10px;
+        height:30px;
+        line-height:30px;
+    }
+    .class16 {
+        background:green;
+        color:red;
+    }
+	.jqmscrollBar {background:white !important;}	
+	
+</style>
+<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
+<script type="text/javascript" charset="utf-8" src="http://localhost:58888/_appMobi/appmobi.js"></script> 
+<script type="text/javascript" charset="utf-8" src="http://localhost:58888/_appMobi/xhr.js"></script> 	
+    <script type="text/javascript" charset="utf-8" src="./js/learner.js"></script>
+    <script type="text/javascript" charset="utf-8" src="./js/googleMaps.js"></script>
+   
+<script type="text/javascript" charset="utf-8" src="./jq.mobi.js"></script> 
+<!-- include touch.js on desktop browsers only -->
+<script>
+function loadedPanel(what){
+    //We are going to set the badge as the number of li elements inside the target
+	$.ui.updateBadge("#jqmlink",$("#jqm").find("li").length);
+	}
+	function unloadedPanel(what){
+	
+	}
+if(!((window.DocumentTouch&&document instanceof DocumentTouch)||'ontouchstart' in window)){
+var script=document.createElement("script");
+script.src="touch.js";
+var tag=$("head").append(script);
+$.os.android=true; //let's make it run like an android device
+$.os.desktop=true;
+}
+var oldElem="default";
+function setActiveStyleSheet(title) {
+   var a = document.getElementsByTagName("link");
+   var currElem;
+   
+   if(title==oldElem.getAttribute("title")||oldElem=="default")
+      return;
+   for(i=0; i<a.length; i++) {
+   
+       if(a[i].getAttribute("title")==title){
+         currElem=a[i];
+       }
+       else if(!a[i].getAttribute("disabled")&&a[i].getAttribute("title"))
+          oldElem=a[i];
+   }
+   
+   currElem.removeAttribute("disabled");
+   jq.ui.showMask();
+   window.setTimeout(function(){
+      jq.ui.hideMask();
+      oldElem.setAttribute("disabled","true");
+   },500);
+}
+$(document).ready(function(){
+oldElem=document.getElementsByTagName("link")[0];
+});
+
+</script>
+
+
+<script type="text/javascript" charset="utf-8" src="./plugins/jq.swipe.js"></script> 
+<script type="text/javascript" charset="utf-8" src="./plugins/jq.template.js"></script> 
+<script type="text/javascript" charset="utf-8" src="./plugins/jq.alphatable.js"></script> 
+<script type="text/javascript" charset="utf-8" src="./plugins/jq.scroller.js"></script>
+<script type="text/javascript" charset="utf-8" src="./ui/jq.ui.js"></script> 
+          
+
+<script type="text/javascript">
+    /* This function runs once the page is loaded, but appMobi is not yet active */
+     
+	var webRoot="./template/";
+	$.ui.autoLaunch=false;
+    $.ui.openLinksNewTab=false;
+  
+    var init = function(){
+	   $.ui.backButtonText="Back";  
+	   window.setTimeout(function(){$.ui.launch();},2000);
+      // $.ui.removeFooterMenu(); This would remove the bottom nav menu
+    };
+    document.addEventListener("DOMContentLoaded",init,false);  
+	$.ui.ready(function(){console.log('ready');});
+    
+    /* This code prevents users from dragging the page */
+    var preventDefaultScroll = function(event) {
+        event.preventDefault();
+        window.scroll(0,0);
+        return false;
+    };
+	
+	document.addEventListener('touchmove', preventDefaultScroll, false);
+
+    /* This code is used to run as soon as appMobi activates */
+    var onDeviceReady=function(){
+	 AppMobi.device.hideSplashScreen();
+	AppMobi.device.setRotateOrientation("portrait");
+        AppMobi.device.setAutoRotate(false);
+		webRoot=AppMobi.webRoot+"template/";
+        AppMobi.player.startAudio('sounds/intro.mp3',false);
+        loadDataBase(); 
+       
+		
+    };
+    document.addEventListener("appMobi.device.ready",onDeviceReady,false);
+   // var AMUi="";
+
+	function showHide(obj,objToHide){
+		var el=$("#"+objToHide)[0];
+    
+		if(obj.className=="expanded"){
+			obj.className="collapsed";
+		}
+		else{
+			obj.className="expanded";
+		}
+		$(el).toggle();
+		
+	}
+    /* Geolocation */
+    
+   
+        var infoWindow;
+        function loadDharugLoc(map, infoWindow){ 
+            
+            var sc = new google.maps.LatLng( -33.8574,151.21243);
+            var para =new google.maps.LatLng( -33.815127,151.003251);
+            
+            markerSC= new google.maps.Marker({
+                                             position: sc,
+                                             map: map,
+                                             title: "Sydney Cove: Waran"
+                                             });
+            
+            google.maps.event.addListener(markerSC, "click", function(){
+                                          if (infowindow!=null) {
+                                          infowindow.close();
+                                          } 
+                                          infoWindow=new google.maps.InfoWindow({
+                                                                                content: markerSC.title,
+                                                                                position: sc
+                                                                                });
+                                          infoWindow.open(map,markerSC);
+                                          }); 
+            
+            if(infoWindow==null){
+                
+                infoWindow=new google.maps.InfoWindow({
+                                                      content: markerSC.title,
+                                                      position: sc
+                                                      });
+                infoWindow.open(map,markerSC);
+                
+            }
+            
+            
+            
+            markerPara= new google.maps.Marker({
+                                               position: para,
+                                               map: map,
+                                               title: "Parramatta: burramattagal - where the eels lay"
+                                               });
+            google.maps.event.addListener(markerPara, "click", function(){
+                                          if (infoWindow) {
+                                          infoWindow.close()
+                                          };
+                                          infoWindow=new google.maps.InfoWindow({
+                                                                                content: markerPara.title,
+                                                                                position:para
+                                                                                });
+                                          
+                                          infoWindow.open(map,markerPara);
+                                          });
+            
+        }
+        
+        
+         function startMap() {
+
+        // Fullscreen map
+      
+        var onSuccess = function(position) {
+            if( typeof(navigator.geolocation) != "undefined" &&
+               typeof(navigator.geolocation.stop) != "undefined" ) navigator.geolocation.stop();
+          
+            var latlng = new google.maps.LatLng(position.coords.latitude, 
+                                                    position.coords.longitude);
+            var centre = new google.maps.LatLng( -33.8574,151.21243);
+            
+            
+            var map = new google.maps.Map(document.getElementById("map_canvas"), {
+                                          zoom: 10,
+                                          center: centre,
+                                          mapTypeId: google.maps.MapTypeId.ROADMAP
+                                          });
+            
+            var marker = new google.maps.Marker({
+                                                position: latlng,
+                                                map: map,
+                                                title: "You are here: diem ngyini"
+                                                });
+            
+            
+            google.maps.event.addListener(marker, "click", function(){
+                                          if (infoWindow) {
+                                          infoWindow.close();
+                                          } 
+                                          infoWindow=new google.maps.InfoWindow({
+                                                              content: marker.title,
+                                                             position:latlng
+                                                                                });
+                                          infoWindow.open(map,marker);
+                                          }); 
+
+            loadDharugLoc(map, infoWindow);
+        };
+                
+        var onFail = function() {
+            loadDharugLoc(map, infoWindow);
+        };
+        
+        navigator.geolocation.getCurrentPosition(onSuccess, onFail);
+    }
+    
+    
+	
+</script>
+
+</head>
+<body>
+<div id="jQUi">
+<!-- this is the splashscreen you see. -->
+    <div id="splashscreen" class='ui-loader'>
+        <img src="images/splash_iphone.png">
+        <br><br>
+        <span class='ui-icon ui-icon-loading spin'></span><h1 >Starting app</h1>
+    </div>
+    <div id="header">
+        <a href="#" onclick="AppMobi.player.stopAudio(); AppMobi.player.startAudio('sounds/intro.mp3',false);$.ui.loadContent('#main_info',false,false,'slide');" >  
+        </a>
+       
+           
+            
+    </div>
+
+<div id="content">
+   
+    <div title="Budyari" id="main" selected="true" data-load="loadedPanel" data-unload="unloadedPanel">
+        <h2 class='expanded' onclick='showHide(this,"main_info");showHide(this,"hide");'>Budyari Gumarada</h2>
+		<p id='main_info'><strong>Welcome to the Dharug Dalang app.</strong><br>
+        This was developed to help those learning the Sydney Language.  <br>We provide examples of words from the Sydney Language divided into themes and with linked sound. <br>This app will be updated as we collect more words. It is a growing app<br>
+                It uses resources being collected from Richard Green and based on the work by Jakelyn Troy. <br>Words are collected online at <a href="http://www.dharug.dalang.com.au">The Dharug Dalang site</a> to support those learning the original language of Sydney.  </p> 
+          
+        
+	
+    <div id = 'hide' class='hideable' style="height:20px;background-color:red;"></div>
+        </div> 
+    <div title="Menu" id="jqm" class="panel" data-nav="menu_jqmobi" data-header="testheader">
+        
+       <h2>Select an option</h2>
+        <ul>
+            <li><a href="#history">Dharug History</a></li>
+            <li><a href="#" onclick="AppMobi.player.stopAudio();$.ui.loadContent('#words',false,false,'slide');" >
+                Dharug WordList</a></li>
+            
+            <li><a href="#geolocation" onclick="startMap();">Dharug Map</a></li>
+        </ul>
+    </div> 
+    
+    
+    <div class="panel" id="wordList"  title="Dharug Words" style="" scrolling="no">
+            <style>
+                #contentDIV .alphaItem {padding:5px;}
+                #contentDIV .alphaItem:nth-child(even) {background: #CCC}
+                #contentDIV .alphaItem:nth-child(odd) {background: #FFF}
+                .tableHeader {
+                    background:blue;font-weight:bold;text-align:center;height:24px;
+                    color:white;font-size:20px;line-height:24px;
+                }
+                </style>
+            <br><br>
+        <div id="listControl" style="margin-left:auto;margin-right:auto;position:absolute;top:20px;bottom:0px;left:0px;overflow:hidden;width:100%;padding-bottom:10px;">
+            <div id="contentDIV_container" style="width:100%;height:100%;background-color:white;overflow:hidden;">
+                <div id="contactsContentDIV" style='color:black'>
+                    <div class="tableHeader" id="itm_anchor_A">Warning</div> 
+                    
+                   <div> Data is still being loaded. Please wait <br>and retry in a minute</div>
+                    
+                 
+
+                </div>
+            </div>
+        </div>
+       
+    </div>
+    
+    
+    <div id="words"  title="Dharug" class="panel">
+   
+        <ul>		
+            <li><a href="#bodyparts" onclick="AppMobi.player.stopAudio();" >Body Parts</a></li>
+            <li><a href="#wordList" onclick="AppMobi.player.stopAudio(); displayWords('Warami')">Greeting</a></li>
+            <li><a href="#wordList" onclick="AppMobi.player.stopAudio(); displayWords('Mammal')">Mammal</a></li>
+            <li><a href="#wordList" onclick="AppMobi.player.stopAudio(); displayWords('Bird')">Bird</a></li>
+            <li><a href="#wordList" onclick="AppMobi.player.stopAudio(); displayWords('Plant')">Plants</a></li>
+            <li><a href="#wordList" onclick="AppMobi.player.stopAudio(); displayWords('Nura')">Country</a></li>		
+            <li><a href="#wordList" onclick="AppMobi.player.stopAudio(); displayWords('Mudjin')">Family</a></li>
+            <li><a href="#wordList" onclick="AppMobi.player.stopAudio(); displayWords('Badalya')">Food</a></li>
+            
+            <li><a href="#wordList" onclick="displayWords('Manyaniya')">Verbs</a></li>
+            
+        </ul>
+    </div>
+    
+    
+
+    <div id="bodyparts" class="panel" title="Body Parts">
+        
+    </div>
+    </div>
+    <div title="History" id="history" data-tab="history_info" class="panel">
+        <div id="wrapper">
+            <p>
+            Didjurigura wugul banne bembulra Biiami Dharamullen. 
+            </p><p>
+            The clans of the Gubragal (Gobragal) around present day Liverpool were the people of the black duck 'Yurangai' and black swan Mulgu, taking their words from the voices and songs of both birds. For example, when the Mulgu was heard to swallow water they would release the sound Badu so it was that our word for water became Badu. 
+            </p><p>
+            A similar sound could be heard to issue forth when the Mulgu swallowed their food the sound Bada will be heard to resonate giving families of the Darugule/Dharawal/Yuin Kurik people of the land the word used for eating Bada.
+            </p><p>
+            Dharug which can also be spelt Dharukk, Dharoog, Dharrag, Dararrug including numerous other interpretations, came from the word for yam Miginy. Dharug is the root or the Midyini of the languages of the Sydney basin. 
+            </p><p>
+            Burramattagal is where many of the sydney clans met during the afternoon Gumedah to share their catch. Numerous Darugule clans shared this territory during the invasion of (1770 B.P)
+            </p><p>
+            We are grateful to non-indigenous linguists. Nevertheless the original peoples of Australia have contributed years of their own research around the campfire to verify that these names for clans were a misconception. 
+            </p><p.
+                The Darugule Iyura in particular are forever grateful to Sir William Dawes of the first fleet and flagship the Sirius for having the grace and intelligence of humanity to record the original traditional dalang (tongue) of the elder people of Sydney Darugule-wayun. </p><p>
+                He was excommunicated back to England as he was "fraternising with the enemy", an enemy that was for years after defined as flora and fauna.
+                </p><p>
+                It is widely known that the languages of the Sydney Iyura (Eora) were forbidden to be spoken by the traditional speakers of the clans. What is interesting to acknowledge is the ongoing myth that the languages have never been spoken since their demise. </p><p>
+                In fact there has been a numerous groups of descendants whom have kept the tongue alive during occupation.
+                </p><p>
+                If we learn from the lessons of the past we realise that this has happened often during occupation, as the Greek language suffered four hundred years of denial of continuity and any form of traditional cultural practices, and they were forbidden any form of communication and suppressed beneath the yoke of the invading Ottaman Empire. Similar persecution and denial of languages in Central America, some Mayan tribes still communicate in a dialect containing thirteen letters or sounds of their particular alphabet.
+                </p><p>
+                If we consider the Original languages of the Nations First Peoples of our continent we must admit that it has only been a mere two generations, that we had suffered the loss of the public use of our tongues, dalang-bu.
+                </div>
+        
+        
+        
+    </div>        
+    
+    <script>
+        //var myScroll = new iScroll('wrapper',{ hScroll: false, hScrollbar: false, vScroll: true, vScrollbar: true });
+        </script>
+    
+    <div id="geolocation" title="Sydney Map"  class="panel" >
+        <div id="map_canvas"  style="width:320px;height:400px;"></div>
+        Click on place marker to read location
+    </div>
+    
+    <div id="navbar" style='margin: 2;float:left;'>
+        <a href="#main"  class='icon home' >home
+        </a>
+        <a href="#jqm"  data-transition="up" class="icon tools" id='jqmlink'>Dharug</a>
+        <a href="#history" data-transition="up" class="icon info">history</a>
+        <a href="#words"   data-transition="right" class="icon paper" >words</a>
+        <a href="#geolocation" onclick="startMap();" class="icon location">map</a>
+        
+    </div>
+
+	</div>
+
+  
+
+	<!-- jqUi > API -->
+  
+
+    
+</div>
+    
+
+<!-- navbar -->
+   
+  
+
+   <!-- ------------------------------------------ -->
+<nav>
+    <div style="height:80px;">
+        </div>
+    Language Map of Australia compiled by <a href="http://www.aiastis.gov.au">AIATSIS</a>
+    <img src="Language_Map.jpg">
+     </nav>
+
+</div>
+</body>
+</html>

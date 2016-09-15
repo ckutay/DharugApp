@@ -1,0 +1,162 @@
+<!DOCTYPE html><!--HTML5 doctype-->
+<html>
+<!--
+Copyright (c) 2011, 2012, 2013 Intel Corporation
+
+ Permission is hereby granted, free of charge, to any person
+ obtaining a copy of this software and associated documentation
+ files (the "Software"), to deal in the Software without
+ restriction, including without limitation the rights to use,
+ copy, modify, merge, publish, distribute, sublicense, and/or sell
+ copies of the Software, and to permit persons to whom the
+ Software is furnished to do so, subject to the following
+ conditions:
+
+ The above copyright notice and this permission notice shall be
+ included in all copies or substantial portions of the Software.
+
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+ OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+ HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+ OTHER DEALINGS IN THE SOFTWARE.
+-->
+<head>
+<title>Hello World</title>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+    
+    <script type="text/javascript" charset="utf-8" src="_appMobi/appmobi_local_bootstrap.js"></script>
+    <!--
+	<script type="text/javascript" charset="utf-8" src="camera.js"></script> 
+	-->
+
+	
+    <link href="styles.css" rel="stylesheet" type="text/css">
+        
+    <style type="text/css">
+		* { -webkit-user-select:none; -webkit-tap-highlight-color:rgba(255, 255, 255, 0); -ms-touch-action:none;} 
+        input, textarea  { -webkit-user-select:text; } 
+        body  
+        {
+            font-family:Arial;font-size:32pt;
+            background-image:url('images/background.jpg');
+        }
+        button 
+        {
+        	font-size:32pt;
+        }
+    </style>
+        
+    <script type="text/javascript" language="javascript">
+    //global variables
+    
+    //Initialization function
+    function init()
+    {}
+
+    //*** Prevent Default Scrolling ******
+    preventDefaultScroll = function(event) {
+        // Prevent scrolling on this element
+        event.preventDefault();
+        window.scroll(0,0);
+        return false;
+    };
+    
+    window.document.addEventListener('touchmove', preventDefaultScroll, false);
+        
+    //*** Device Ready Code **********
+    //This event handler is fired once the AppMobi libraries are ready
+    //AppMobi is ready to roll
+    function onDeviceReady()
+    {
+        //use AppMobi viewport
+        AppMobi.display.useViewport(768,1024);
+    
+        //lock orientation
+        AppMobi.device.setRotateOrientation("portrait");
+        AppMobi.device.setAutoRotate(false);
+        
+        //manage power
+        AppMobi.device.managePower(true,false);
+		
+		//hide splash screen
+		AppMobi.device.hideSplashScreen();		
+    }
+    
+    //initial event handler to detect when appMobi is ready to roll
+    document.addEventListener("appMobi.device.ready",onDeviceReady,false); 
+      
+	var oldTC="This sample has detected that you are not using the most up to date appMobi test container.  This sample's functionality may be compromised as a result.  Touch OK to continue. ";
+	window.addEventListener("load", function(){ if (typeof(AppMobiInit) != 'object'){ alert(oldTC); }}, false);
+
+        
+        
+    //**** These commands are just samples that can be deleted from a hello world app ****//    
+         
+    function beepOnce()
+    {
+        try
+        {
+            AppMobi.notification.beep(1);
+        }
+        catch(e) {}
+    }
+    
+    function vibrateDevice()
+    {
+        try
+        {
+            AppMobi.notification.vibrate();
+        }
+        catch(e) {} 
+    }
+
+    function bark()
+    {
+        try
+        {
+            AppMobi.player.playSound("sounds/bark02.mp3"); 
+        }
+        catch(e) { } 
+    }
+    
+    function playDead()
+    {
+        document.getElementById("shroud").style.display="block";
+    }
+    
+    function wakeUp()
+    {
+        document.getElementById("shroud").style.display="none";
+    }
+    
+    </script>
+
+    
+
+</head>
+
+
+<body onload="init();">
+
+<!--
+<img src="images/IDF2013.jpg" style="width:768px;" />
+-->
+<img src="images/Logo_Main_Graphic.png" style="width:758px;" />
+
+<br/>
+<span style="text-align:center;width:768px;left:10px;top:60px;">
+    <span id="spnHead" style="font-weight:bold;font-size:48pt;width:768px;text-align:center;">Hello World!</span>
+    <br />
+    <button id="btnBeep" ontouchstart="beepOnce();">Beep</button>
+    <button id="btnVibrate" ontouchstart="vibrateDevice();">Vibrate</button>
+    <button id="btnBark" ontouchstart="bark();">Bark</button>
+    <button id="btnPlayDead" ontouchstart="playDead();">Play Dead</button>
+	
+</span>
+
+<div id="shroud" style="position:absolute;top:0px;left:0px;color:black;background-color:Black;width:768px;height:1304px;display:none;" onclick="wakeUp();" ></div></body>
+</html>

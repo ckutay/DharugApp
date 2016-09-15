@@ -1,0 +1,164 @@
+<?xml version="1.0"?>
+<contacts>
+<contact>
+<id>123456</id>
+<last>O'reily&quot;</last>
+<name>&quot;Ryan O'reily&quot;</name>
+<emails>email@address1.com</emails>
+<emails>email@address2.com</emails>
+<addresses><zip>zip 1</zip>
+<street>Street 1</street>
+<state>State 1</state>
+<city>City 1</city>
+<country>Country 1</country>
+</addresses>
+<addresses><zip>zip 2</zip>
+<street>Street 2</street>
+<state>State 2</state>
+<city>City 2</city>
+<country>Country 2</country>
+</addresses>
+<first>&quot;Ryan</first>
+<phones>phone number 1</phones>
+<phones>phone number 2</phones>
+</contact>
+
+<contact>
+<id>1311181579737</id>
+<last>Tables</last>
+<name>Bobby Tables</name>
+<emails>email@address1.com</emails>
+<emails>email@address2.com</emails>
+<addresses><zip>zip 1</zip>
+<street>Street 1</street>
+<state>State 1</state>
+<country>Country 1</country>
+<city>City 1</city>
+</addresses>
+<addresses><zip>zip 2</zip>
+<street>Street 2</street>
+<state>State 2</state>
+<country>Country 2</country>
+<city>City 2</city>
+</addresses>
+<first>Bobby</first>
+<phones>phone number 1</phones>
+<phones>phone number 2</phones>
+</contact>
+
+<contact>
+<id>1311186164159</id>
+<last>Fonda</last>
+<name>Jane Fonda</name>
+<emails>email@address1.com</emails>
+<emails>email@address2.com</emails>
+<addresses><zip>zip 1</zip>
+<street>Street 1</street>
+<state>State 1</state>
+<country>Country 1</country>
+<city>City 1</city>
+</addresses>
+<addresses><zip>zip 2</zip>
+<street>Street 2</street>
+<state>State 2</state>
+<country>Country 2</country>
+<city>City 2</city>
+</addresses>
+<first>Jane</first>
+<phones>phone number 1</phones>
+<phones>phone number 2</phones>
+</contact>
+
+<contact>
+<id>1311186169045</id>
+<last>Da' Plumber</last>
+<name>Joe Da' Plumber</name>
+<emails>email@address1.com</emails>
+<emails>email@address2.com</emails>
+<addresses><zip>zip 1</zip>
+<street>Street 1</street>
+<state>State 1</state>
+<country>Country 1</country>
+<city>City 1</city>
+</addresses>
+<addresses><zip>zip 2</zip>
+<street>Street 2</street>
+<state>State 2</state>
+<country>Country 2</country>
+<city>City 2</city>
+</addresses>
+<first>Joe</first>
+<phones>phone number 1</phones>
+<phones>phone number 2</phones>
+</contact>
+
+<contact>
+<id>1311181418689</id>
+<last>Bird</last>
+<name>Larry Bird</name>
+<emails>email@address1.com</emails>
+<emails>email@address2.com</emails>
+<addresses><zip>zip 1</zip>
+<street>Street 1</street>
+<state>State 1</state>
+<country>Country 1</country>
+<city>City 1</city>
+</addresses>
+<addresses><zip>zip 2</zip>
+<street>Street 2</street>
+<state>State 2</state>
+<country>Country 2</country>
+<city>City 2</city>
+</addresses>
+<first>Larry</first>
+<phones>phone number 1</phones>
+<phones>phone number 2</phones>
+</contact>
+
+<contact>
+<id>1311186169046</id>
+<last>Monroe</last>
+<name>Marilyn Monroe</name>
+<emails>email@address1.com</emails>
+<emails>email@address2.com</emails>
+<addresses><zip>zip 1</zip>
+<street>Street 1</street>
+<state>State 1</state>
+<country>Country 1</country>
+<city>City 1</city>
+</addresses>
+<addresses><zip>zip 2</zip>
+<street>Street 2</street>
+<state>State 2</state>
+<country>Country 2</country>
+<city>City 2</city>
+</addresses>
+<first>Marilyn</first>
+<phones>phone number 1</phones>
+<phones>phone number 2</phones>
+</contact>
+
+<contact>
+<id>1311186169047</id>
+<last>Jordan</last>
+<name>Michael Jordan</name>
+<emails>email@address1.com</emails>
+<emails>email@address2.com</emails>
+<addresses><zip>zip 1</zip>
+<street>Street 1</street>
+<state>State 1</state>
+<country>Country 1</country>
+<city>City 1</city>
+</addresses>
+<addresses><zip>zip 2</zip>
+<street>Street 2</street>
+<state>State 2</state>
+<country>Country 2</country>
+<city>City 2</city>
+</addresses>
+<first>Michael</first>
+<phones>phone number 1</phones>
+<phones>phone number 2</phones>
+</contact>
+
+</contacts>

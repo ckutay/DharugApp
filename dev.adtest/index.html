@@ -1,0 +1,117 @@
+<!DOCTYPE html><!--HTML5 doctype-->
+<html>
+<!--
+Copyright (c) 2010 appMobi
+
+ Permission is hereby granted, free of charge, to any person
+ obtaining a copy of this software and associated documentation
+ files (the "Software"), to deal in the Software without
+ restriction, including without limitation the rights to use,
+ copy, modify, merge, publish, distribute, sublicense, and/or sell
+ copies of the Software, and to permit persons to whom the
+ Software is furnished to do so, subject to the following
+ conditions:
+
+ The above copyright notice and this permission notice shall be
+ included in all copies or substantial portions of the Software.
+
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+ OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+ HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+ OTHER DEALINGS IN THE SOFTWARE.
+-->
+<head>
+<title>Ad Tester</title>
+
+    <!-- be sure to include the appMobi javascript API library -->
+    <script type="text/javascript" charset="utf-8" src="http://localhost:58888/_appMobi/appmobi.js"></script>
+
+    <!-- add the webkit-user-select style to prevent selecting on the device -->
+    <style type="text/css">
+        * {
+           -webkit-user-select: none;  /* this prevents selecting for all elements */
+        }
+        body {  }
+    </style>
+
+    <script type="text/javascript" language="javascript">
+    //Set any global variables here
+    var ad_mode = 0;
+    var ad_app_basead = "%AD_APP_BASEAD%";
+    var ad_app_compat = "%AD_APP_COMPAT%";
+
+    //*** Prevent Default Scrolling ******
+    //Use this code to prevent the screen from scrolling
+    preventDefaultScroll = function(event) {
+        // Prevent scrolling on this element
+        event.preventDefault();
+        window.scroll(0,0);
+        return false;
+    };
+    window.document.addEventListener('touchmove', preventDefaultScroll, false);
+
+    //*** Device Ready Code **********
+    function onDeviceReady()
+    {
+    	document.getElementById('adfrm').src = ad_app_basead;
+    	document.getElementById('adfrm').style.display = "block";
+    }
+
+    // These are needed to make nested iframe appMobi ads work
+    function getAppMobiObject()
+    {
+    	if( typeof AppMobi == "undefined" )
+    		return null;
+
+    	return AppMobi;
+    }
+
+    // These are needed to make nested iframe appMobi ads work
+    function getAppMobiDocument()
+    {
+    	return document;
+    }
+
+    //initial event handler to detect when appMobi is ready to go
+    document.addEventListener("appMobi.device.ready",onDeviceReady,false);
+
+    function switchAd()
+    {
+		if( ad_mode == 0 )
+		{
+			document.getElementById('adfrm').src = ad_app_compat;
+			ad_mode = 1;
+		}
+		else
+		{
+			document.getElementById('adfrm').src = ad_app_basead;
+			ad_mode = 0;
+		}
+    	updateImages();
+    }
+
+    function updateImages()
+    {
+		document.getElementById('btnfull').src = ( ad_mode == 0 ? "ad_testing_button-full_ad-on.png" : "ad_testing_button-full_ad-off.png" );
+		document.getElementById('btncomp').src = ( ad_mode == 1 ? "ad_testing_button-comp_ad-on.png" : "ad_testing_button-comp_ad-off.png" );
+    }
+
+    </script>
+
+</head>
+
+<body style="width:320px;height:544px;background-image:url('ad_app_frame.png');background-repeat:no-repeat;">
+
+	<img src="http://localhost:58888/_appMobi/ad_loading.gif" style="border:0px solid #ffffff;overflow:hidden;position:absolute;width:300px;height:50px;left:10px;top:98px;">
+	<iframe id="adfrm" src="about:blank" scrolling="no" style="display:none;border:0px solid #ffffff;overflow:hidden;position:absolute;width:300px;height:50px;left:10px;top:98px;"></iframe>
+
+	<img id="btnfull" onclick="switchAd();" src="ad_testing_button-full_ad-on.png" onmouseout="updateImages();" onmouseover="this.src = 'ad_testing_button-full_ad-overdown.png';" style="position:absolute;top:148px;left:20px;">
+	<img id="btncomp" onclick="switchAd();" src="ad_testing_button-comp_ad-off.png" onmouseout="updateImages();" onmouseover="this.src = 'ad_testing_button-comp_ad-overdown.png';" style="position:absolute;top:148px;left:168px;">
+
+</body>
+
+</html>

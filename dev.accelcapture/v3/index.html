@@ -1,0 +1,208 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+	<title>Accelerometer Capture</title>
+	<script type="text/javascript" charset="utf-8" src="http://localhost:58888/_appMobi/appmobi.js"></script>
+	<script type="text/javascript" charset="utf-8" src="server.js"></script>
+    <style type="text/css">
+        * {
+           -webkit-user-select: none;  /* prevent copy paste for all elements */
+        }
+        body { color:White;font-family:Arial;font-size:22pt; }
+    </style>
+
+	<script language="javascript" type="text/javascript">
+	    var portrait_width = 768;
+	    var landscape_width = 1024;
+
+	    var chip = null;
+	    var butn = null;
+	    var accelx = null;
+	    var accely = null;
+	    var accelz = null;
+	    var current_left = 0;
+	    var current_top = 0;
+	    var current_spin = 0;
+
+	    var o_width = portrait_width;
+	    var o_height = landscape_width;
+
+	    var recording = false;
+	    var avalues = [];
+
+	    //this is the event handler for successful accelerometer readings
+	    function suc(a)
+	    {
+	        //readings are from -1 to 1 (with 0 being equilibrium in a plane). Assumes holding in portrait mode
+	        //with screen pointed straight at your chest.
+	        //e.g. in the X plane -1 = tilted all the way left, 1 = tilted all the way right.
+	        //e.g. in the Y plane -1 = tilted all the way up, 1 = tilted all the way down.
+
+	        if( accelz == null ) return;
+
+	        a.x = Math.round(a.x*100)/100;
+	        a.y = Math.round(a.y*100)/100;
+	        a.z = Math.round(a.z*100)/100;
+
+			accelx.innerHTML = "X: " + a.x;
+			accely.innerHTML = "Y: " + a.y;
+			accelz.innerHTML = "Z: " + a.z;
+
+			if( recording ) avalues.push(a);
+
+	        if( Math.abs(a.x) > 0.19 ) current_left += (6 * a.x);
+	        if( Math.abs(a.y) > 0.19 ) current_top -= (6 * a.y);
+	        if( Math.abs(a.z) > 0.19 ) current_spin += (3 * a.z);
+
+	        if( current_left < 0 ) current_left = 0;
+	        if( current_left > (portrait_width-180) ) current_left = (portrait_width-180);
+
+	        if( current_top < 0 ) current_top = 0;
+	        if( current_top > (landscape_width-180) ) current_top = (landscape_width-180);
+
+
+	        if( current_spin < 0 ) current_spin += 360;
+	        if( current_spin > 360 ) current_spin -= 360;
+
+	        // Just update the chip location and rotation
+			chip.style.left = current_left + "px";
+			chip.style.top = current_top + "px";
+			chip.style.webkitTransform = 'rotate(' + current_spin + 'deg) scale(.85, .85)';
+	    }
+
+	    var fail = function () { };
+
+	    var watchAccel = function () {
+	        var opt = {};
+	        opt.frequency = 100;
+
+	        timer = AppMobi.accelerometer.watchAcceleration(suc, opt);
+	    }
+
+	    function onDeviceReady() {
+            //use AppMobi viewport
+	        var landscapewidth = 1360;
+	        AppMobi.display.useViewport(portrait_width, landscapewidth)
+
+            //lock orientation
+            AppMobi.device.setRotateOrientation("portrait");
+            AppMobi.device.setAutoRotate(false);
+
+            //manage power
+            AppMobi.device.managePower(true,false);
+
+            watchAccel();
+	    }
+
+	    function doRecord()
+	    {
+	    	if( recording )
+	    	{
+	    		recording = false;
+	    		butn.src = "images/record.png"
+	    		var answer = confirm ("Do you want to save these values to your appMobiXDK?")
+
+	    		if( answer ) submitCapture();
+			}
+	    	else
+	    	{
+	    		recording = true;
+	    		butn.src = "images/stop.png"
+	    	}
+
+			avalues = [];
+	    }
+
+	    function valuesToString()
+	    {
+	    	var json = "";
+	    	var len = avalues.length;
+	    	for(var i = 0; i < len; i++ )
+	    	{
+	    		var acc = avalues[i];
+	    		var val = "{x:" + acc.x + ",y:" + acc.y + ",z:" + acc.z + "},";
+	    		json += val;
+	    	}
+
+	    	return json;
+	    }
+
+	    function submitCapture2()
+	    {
+	    	var iframe = document.createElement("iframe");
+			iframe.setAttribute('id','RSIFrame');
+      		iframe.style.border='0px';
+      		iframe.style.width='0px';
+      		iframe.style.height='0px';
+      		document.body.appendChild(iframe);
+			var idoc = iframe.contentWindow.document;
+			idoc.open();
+	    	var hiddendoc = "<html><body><form id='dynForm' action='http://" + server + "/?CMD=SDK_ACCELCAPTURE' method='post'><input id='accel_values' type='hidden' name='values' value='a'/></form></body></html>";
+			idoc.write(hiddendoc);
+			idoc.close();
+	    	alert(hiddendoc);
+	    	idoc.getElementById("accel_values").value = valuesToString();
+	    	alert(idoc.getElementById("accel_values").value);
+	    	idoc.getElementById("dynForm").submit();
+	    	document.body.removeChild(iframe);
+	    }
+		
+	    function submitCapture()
+	    {
+		    document.getElementById("accel_values").value = valuesToString();
+		    document.getElementById("dynForm").action='http://' + server + '/?CMD=SDK_ACCELCAPTURE';
+	    	document.getElementById("dynForm").submit();
+	    }
+		
+		
+	    document.addEventListener("appMobi.device.ready",onDeviceReady,false);
+
+	    function onBodyLoad()
+	    {
+	        chip = document.getElementById("div_chip");
+	        butn = document.getElementById("div_rec");
+	        accelx = document.getElementById("accel_x");
+	        accely = document.getElementById("accel_y");
+	        accelz = document.getElementById("accel_z");
+	        butn.addEventListener('touchstart',doRecord,false);
+	        butn.addEventListener('click',doRecord,false);
+	    }
+
+        //*** Prevent Default Scroll ******
+        preventDefaultScroll = function(event)
+        {
+            // Prevent scrolling on this element
+            event.preventDefault();
+            window.scroll(0,0);
+            return false;
+        };
+
+        window.document.addEventListener('touchmove', preventDefaultScroll, false);
+
+		var oldTC="This sample has detected that you are not using the most up to date appMobi test container.  This sample's functionality may be compromised as a result.  Touch OK to continue. ";
+		window.addEventListener("load", function(){ if (typeof(AppMobiInit) != 'object'){ alert(oldTC); }}, false);
+
+	</script>
+</head>
+
+<body onload="onBodyLoad()" background="images/app_bg.jpg">
+
+	<img id="div_rec" src="images/record.png" style="display:block;top:0px;left:360px;position:absolute;">
+	<img id="div_chip" src="images/poker_chip.png" style="display:block;top:0px;left:0px;position:absolute;width:180px;height:180px;">
+
+	<div id="accel_x" style="color:#000;font-size:32px;position:absolute;left: 50px;top:1050px;">0.0</div>
+	<div id="accel_y" style="color:#000;font-size:32px;position:absolute;left:350px;top:1050px;">0.0</div>
+	<div id="accel_z" style="color:#000;font-size:32px;position:absolute;left:650px;top:1050px;">0.0</div>
+
+<form method='post' action='' id='dynForm' target='hiddenIFrame'>
+<input id='accel_values' type='hidden' name='values' value='a'/>
+</form>
+
+<iframe style='width:0px;height:0px;border:0px;' id='hiddenIFrame' name='hiddenIFrame'></iframe>
+
+
+</body>
+
+</html>

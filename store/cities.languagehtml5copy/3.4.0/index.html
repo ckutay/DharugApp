@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html>
+<head>
+<!-- **********************************************************
+JUMP AND RUN - Non-physics enabled, simple shooter sample
+
+THIS IS DEMO CODE. YOU CAN MODIFY BASIC ASPECTS OF THE DEMO (LIKE BUTTONS) BUT WILL NOT BE ABLE TO
+MODIFY THE GAME LEVELS ETC. WITHOUT PURCHASING THE A GAME PRO PACK
+
+-->
+	<title>Memory Game</title>
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<script type="text/javascript" charset="utf-8" src="lib/appmobi/appmobi_shim.js"></script> 
+	<script type="text/javascript" charset="utf-8" src="statmobi.js"></script> 
+	<script type="text/javascript" charset="utf-8" src="updatemobi.js"></script> 
+	<script type="text/javascript" charset="utf-8" src="lib/appmobi/keymapper.js"></script> 
+	<script type="text/javascript">
+	
+		var init = function(){
+			//bind keys to buttons
+			mapKeyToElement("up", "Jumpbutn");
+			mapKeyToElement("f", "Shootbutn");
+
+			//add other init code
+			
+		};
+		window.addEventListener("load",init,false);  
+		
+
+		/* This code prevents users from dragging the page */
+		var preventDefaultScroll = function(event) {
+			event.preventDefault();
+			window.scroll(0,0);
+			return false;
+		};
+		window.document.addEventListener('touchmove', preventDefaultScroll, false);
+		
+		/* This code is used to run as soon as appMobi activates */
+		var onDeviceReady=function(){
+			AppMobi.display.useViewport(320,480);
+			
+			document.getElementsByTagName('body')[0].style.visibility="visible";
+			
+			AppMobi.device.setRotateOrientation("landscape");
+			
+			AppMobi.device.managePower(true,false);
+			
+			AppMobi.canvas.load("index.js");
+			
+			AppMobi.device.setAutoRotate(false);
+	
+			/**************************************
+				appMobi Updates
+				Checks for updates on startup
+				and also listens for update alerts
+				while the app is running
+			**************************************/
+			updateMobi.init(true);
+			
+			
+			/**************************************
+				statMobi 
+				Record that the game was loaded
+				And what type of OS
+			**************************************/
+			statMobi.record({
+				'appevent':'deviceReady',
+				'query':'platform='+AppMobi.device.platform
+			});
+	
+		};
+		document.addEventListener("appMobi.device.ready",onDeviceReady,false);
+		
+		/* This is called by the game once it has been loaded into DirectCanvas */
+		var canvasInit=function() {
+			if( AppMobi.isxdk)
+			{
+			//	document.getElementById('document').style.display = "block";
+				//wait 100 ms to let game draw, then pause
+				setTimeout("AppMobi.canvas.execute('ig.game.show('SplashScreen');');", 100);
+			}
+		}
+		
+		function handleInput(type) {
+			switch(type) {
+				case 'lDown':
+					AppMobi.canvas.execute('ig.input.actions[\'left\']=true;ig.input.presses[\'left\']=true;');
+					break;
+				case 'lUp':
+					AppMobi.canvas.execute('ig.input.delayedKeyup[\'left\']= true;');
+					break;
+				case 'rDown':
+					AppMobi.canvas.execute('ig.input.actions[\'right\']=true;ig.input.presses[\'right\']=true;');
+					break;
+				case 'rUp':
+					AppMobi.canvas.execute('ig.input.delayedKeyup[\'right\']= true;');
+					break;
+				case 'sDown':
+					AppMobi.player.playSound('media/vortex2.wav');
+					AppMobi.canvas.execute('ig.input.actions[\'shoot\']=true;ig.input.presses[\'shoot\']=true;');
+					break;
+				case 'sUp':
+					AppMobi.canvas.execute('ig.input.delayedKeyup[\'shoot\']= true;');
+					break;
+				case 'jDown':
+					AppMobi.player.playSound('media/bounce.wav');
+					AppMobi.canvas.execute('ig.input.actions[\'jump\']=true;ig.input.presses[\'jump\']=true;');
+					break;
+				case 'jUp':
+					AppMobi.canvas.execute('ig.input.delayedKeyup[\'jump\']= true;');
+					break;
+			}
+		}
+		
+	</script>
+	
+	<style type="text/css">
+		/* Prevent copy paste for all elements except text fields */
+		*  { -webkit-user-select:none; -webkit-tap-highlight-color:rgba(255, 255, 255, 0); }
+		input, textarea  { -webkit-user-select:text; }
+		
+		#Jumpbutn {
+			position:absolute;
+			left:10px;
+			height:96px;
+			width:77px;
+			bottom:12px;
+			color:white;
+			background:url('media/buttons_big.png') -83px -96px;
+			opacity:.4;
+			z-index:10;
+		}
+		#Shootbutn {
+			position:absolute;
+			left:90px;
+			height:96px;
+			width:77px;
+			bottom:12px;
+			color:white;
+			background:url('media/buttons_big.png') 0px -96px;
+			opacity:.4;
+			z-index:10;
+		}
+body{
+    background: #151515;
+}
+
+.ui-content{
+    color: white;
+}
+
+.ui-body-c{
+    background: none;
+}
+
+.tmp-dashboard-item-label{
+    display: none;
+}
+
+.tmp-dashboard-item{
+    margin: 5px 0;
+}
+
+.tmp-dashboard-item img{
+    /*height: 26px !important;*/
+    /*width: 26px !important;*/
+    width: 50%;
+    border: 1px solid #151515;
+}
+
+.tmp-dashboard-item.active{
+    background: none;
+}
+
+.tmp-dashboard-item img.active{
+    visibility: visible;
+}
+
+.rotation{
+    -webkit-transform-style: preserve-3d;
+	-webkit-transition: 0.5s;
+    -webkit-transform: rotateY(180deg);
+}
+
+.rotation_back{
+    -webkit-transform-style: preserve-3d;
+	-webkit-transition: 0.5s;
+    -webkit-transform: rotateY(180deg);
+}
+
+.tmp-dashboard-item.correct{
+    background: none;
+}
+
+.correct img{
+    visibility: hidden;
+    border: 1px solid #adff2f;
+}
+
+	</style>
+
+</head>
+<body>
+	<div id="Leftbutn" ontouchstart="handleInput('lDown');" ontouchend="handleInput('lUp');" ></div>
+	<div id="Rightbutn" ontouchstart="handleInput('rDown');" ontouchend="handleInput('rUp');"></div>
+	<div id="Jumpbutn" ontouchstart="handleInput('jDown');" ontouchend="handleInput('jUp');" ></div>
+	<div id="Shootbutn" ontouchstart="handleInput('sDown');" ontouchend="handleInput('sUp');"></div>
+</body>
+</html>
